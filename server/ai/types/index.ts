@@ -108,7 +108,7 @@ export * from './memory.types';
 
 // Mission Control Panel types
 export const mcpConfigSchema = z.object({
-  agents: z.array(agentConfigSchema),
+  agents: z.array(z.any()), // Will be properly typed when imported
   defaultModel: z.string(),
   defaultTemperature: z.number().min(0).max(2),
   maxConcurrentTasks: z.number().positive(),

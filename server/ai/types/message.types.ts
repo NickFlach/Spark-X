@@ -12,7 +12,18 @@ export enum MessagePriority {
 // Message schema
 export const messageSchema = z.object({
   id: z.string(),
-  type: z.string(),
+  type: z.enum([
+    'TASK',
+    'RESULT',
+    'INFO',
+    'ERROR',
+    'MARKET_UPDATE',
+    'TECHNICAL_UPDATE',
+    'VALUE_UPDATE',
+    'EXECUTION_UPDATE',
+    'RESET',
+    'STATUS_UPDATE',
+  ]),
   from: z.string(),
   to: z.string(),
   content: z.string(),
@@ -91,4 +102,24 @@ export interface MessageFilter {
   threadId?: string;
   containsText?: string;
   hasMetadata?: Record<string, unknown>;
+}
+
+export interface MessageQueue {
+  messages: ExtendedMessage[];
+  addMessage(message: ExtendedMessage): void;
+  getNextMessage(): ExtendedMessage | undefined;
+  clear(): void;
+  isEmpty(): boolean;
+}
+
+export interface MessageHandler {
+  handleMessage(message: ExtendedMessage): Promise<void>;
+  canHandle(message: ExtendedMessage): boolean;
+}
+
+export interface MessageBroker {
+  subscribe(handler: MessageHandler): void;
+  unsubscribe(handler: MessageHandler): void;
+  publish(message: ExtendedMessage): Promise<void>;
+  getSubscribers(): MessageHandler[];
 } 

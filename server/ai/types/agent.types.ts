@@ -91,4 +91,57 @@ export const agentDeploymentConfigSchema = z.object({
   }),
 });
 
-export type AgentDeploymentConfig = z.infer<typeof agentDeploymentConfigSchema>; 
+export type AgentDeploymentConfig = z.infer<typeof agentDeploymentConfigSchema>;
+
+export enum AgentState {
+  IDLE = 'IDLE',
+  PROCESSING = 'PROCESSING',
+  ERROR = 'ERROR',
+  PAUSED = 'PAUSED',
+}
+
+export const agentConfigSchema = z.object({
+  role: z.nativeEnum(AgentRole),
+  name: z.string(),
+  description: z.string(),
+  goals: z.array(z.string()),
+  constraints: z.array(z.string()).optional(),
+  allowedTools: z.array(z.string()).optional(),
+  model: z.string().optional(),
+  temperature: z.number().min(0).max(2).optional(),
+  maxTokens: z.number().optional(),
+  tools: z.array(z.any()).optional(),
+  openai: z.object({
+    apiKey: z.string(),
+    defaultModel: z.string().optional(),
+    defaultTemperature: z.number().min(0).max(2).optional(),
+  }),
+});
+
+export type AgentConfig = z.infer<typeof agentConfigSchema>;
+
+export interface AgentTool {
+  name: string;
+  description: string;
+  function: (...args: any[]) => Promise<any>;
+  parameters: Record<string, unknown>;
+}
+
+export interface AgentResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+  error?: Error;
+}
+
+export interface AgentMetrics {
+  tasksProcessed: number;
+  averageProcessingTime: number;
+  successRate: number;
+  lastActive: Date;
+  errors: Array<{
+    timestamp: Date;
+    message: string;
+    stack?: string;
+  }>;
+} 

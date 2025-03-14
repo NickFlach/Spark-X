@@ -2,18 +2,13 @@ import { z } from 'zod';
 
 // Memory entry schema
 export const memoryEntrySchema = z.object({
-  id: z.string(),
-  agentId: z.string(),
   timestamp: z.number(),
   type: z.string(),
   content: z.string(),
-  importance: z.number().min(0).max(1).optional(),
   metadata: z.record(z.unknown()).optional(),
-  tags: z.array(z.string()).optional(),
-  expiresAt: z.number().optional(),
 });
 
-export type MemoryEntryExtended = z.infer<typeof memoryEntrySchema>;
+export type MemoryEntry = z.infer<typeof memoryEntrySchema>;
 
 // Memory category
 export enum MemoryCategory {
@@ -90,4 +85,44 @@ export interface MemoryBackup {
   format: 'JSON' | 'BINARY' | 'COMPRESSED';
   location: string;
   checksum: string;
+}
+
+export const memoryFilterSchema = z.object({
+  startTime: z.number().optional(),
+  endTime: z.number().optional(),
+  type: z.array(z.string()).optional(),
+  metadata: z.record(z.unknown()).optional(),
+});
+
+export type MemoryFilter = z.infer<typeof memoryFilterSchema>;
+
+export interface AgentMemory {
+  getRelevantHistory(): string;
+  addEntry(entry: MemoryEntry): void;
+  clear(): void;
+  getEntries(filter?: MemoryFilter): MemoryEntry[];
+}
+
+export interface MemoryManager {
+  entries: MemoryEntry[];
+  maxEntries: number;
+  relevanceWindow: number;
+  addEntry(entry: MemoryEntry): void;
+  getEntries(filter?: MemoryFilter): MemoryEntry[];
+  getRelevantHistory(): string;
+  clear(): void;
+}
+
+export interface MemoryStrategy {
+  shouldKeep(entry: MemoryEntry): boolean;
+  getRelevanceScore(entry: MemoryEntry): number;
+  getMaxEntries(): number;
+}
+
+export interface MemoryEntryMetadata {
+  importance: number;
+  category: string;
+  tags: string[];
+  relatedEntries: string[];
+  lastAccessed: number;
 } 
