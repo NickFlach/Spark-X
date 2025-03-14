@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { formatDate } from '@/lib/utils';
+import { formatDate, truncateAddress } from '@/lib/utils';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ExternalLink, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { truncateAddress } from '@/lib/utils';
 import { Transaction } from '@shared/schema';
 import { useAuth } from '@/contexts/AuthContext';
 

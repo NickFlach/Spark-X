@@ -1,6 +1,16 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { web3Service, Web3Status } from '@/lib/web3';
 import { useToast } from '@/hooks/use-toast';
+
+// Add type declaration for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: {
+      on: (event: string, callback: any) => void;
+      removeListener: (event: string, callback: any) => void;
+    };
+  }
+}
 
 interface Web3ContextType {
   connect: () => Promise<boolean>;
@@ -36,7 +46,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(web3Service.error);
   const { toast } = useToast();
 
-  const updateState = async () => {
+  const updateState = useCallback(async () => {
     setStatus(web3Service.status);
     setAccount(web3Service.account);
     setError(web3Service.error);
@@ -52,31 +62,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     } else {
       setBalance(null);
     }
-  };
-
-  // Listen for account changes
-  useEffect(() => {
-    const handleAccountsChanged = (accounts: string[]) => {
-      if (accounts.length === 0) {
-        // User disconnected
-        disconnect();
-      } else if (account !== accounts[0]) {
-        // Account changed
-        setAccount(accounts[0]);
-        updateState();
-      }
-    };
-
-    if (typeof window.ethereum !== 'undefined') {
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-    }
-
-    return () => {
-      if (typeof window.ethereum !== 'undefined') {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-      }
-    };
-  }, [account]);
+  }, [setStatus, setAccount, setError, setBalance]);
 
   const connect = async () => {
     try {
@@ -106,7 +92,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     }
   };
 
-  const disconnect = async () => {
+  const disconnect = useCallback(async () => {
     await web3Service.disconnect();
     await updateState();
 
@@ -114,7 +100,30 @@ export function Web3Provider({ children }: { children: ReactNode }) {
       title: 'Wallet Disconnected',
       description: 'Your wallet has been disconnected.',
     });
-  };
+  }, [toast, updateState]);
+
+  // Move useEffect after disconnect function declaration
+  useEffect(() => {
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length === 0) {
+        // User disconnected their wallet
+        disconnect();
+      } else if (accounts[0] !== account) {
+        // User switched accounts
+        updateState();
+      }
+    };
+
+    if (typeof window.ethereum !== 'undefined') {
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+    }
+
+    return () => {
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      }
+    };
+  }, [account, disconnect, updateState]);
 
   const transferTokens = async (to: string, amount: string) => {
     try {
