@@ -1,3 +1,59 @@
+// Common types shared between client and server
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  walletAddress?: string;
+  bio?: string;
+  avatar?: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export interface Idea {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  status: 'draft' | 'published' | 'funded' | 'completed' | 'cancelled';
+  fundingGoal?: number;
+  currentFunding?: number;
+  creatorId: string;
+  creator?: User;
+  tags?: string[];
+  upvotes?: number;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  ideaId: string;
+  userId: string;
+  user?: User;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+export interface Funding {
+  id: string;
+  amount: number;
+  ideaId: string;
+  userId: string;
+  user?: User;
+  transactionHash?: string;
+  createdAt: Date | string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
 // User Types
 export interface User {
   id: string;
