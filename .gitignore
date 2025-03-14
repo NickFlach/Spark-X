@@ -53,4 +53,7 @@ frontend/coverage/
 .DS_Store
 *.pem
 .vercel
-.turbo 
+.turbo
+
+# Nested Spark-X directory
+Spark-X/ 
