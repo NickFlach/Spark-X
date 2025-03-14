@@ -1,60 +1,48 @@
-# AI Prompts
+# AI Agent Prompts
 
-This directory contains prompt templates and configurations for the AI agents in the Spark-X platform.
-
-## Purpose
-
-- Store reusable prompt templates for different agent tasks
-- Maintain consistent prompt structures across agents
-- Enable easy updates to prompts without changing agent code
-- Support versioning of prompts for different use cases
+This directory contains prompt templates used by the AI agents in the Spark-X platform.
 
 ## Structure
 
-Prompts are organized by agent type and task:
+Each agent has its own set of prompts that define how it interacts with users and processes tasks. The prompts are organized by agent type:
 
-```
-prompts/
-  ├── idea_enhancer/
-  │   ├── innovation_prompt.ts
-  │   └── market_context.ts
-  ├── market_analyst/
-  │   ├── market_analysis.ts
-  │   └── competitor_analysis.ts
-  ├── technical_advisor/
-  │   ├── tech_stack_analysis.ts
-  │   └── architecture_review.ts
-  ├── risk_assessor/
-  │   ├── risk_identification.ts
-  │   └── mitigation_strategies.ts
-  ├── implementation_planner/
-  │   ├── project_planning.ts
-  │   └── resource_allocation.ts
-  ├── value_accelerator/
-  │   ├── execution_optimization.ts
-  │   └── value_delivery.ts
-  ├── value_innovator/
-  │   ├── value_stream_identification.ts
-  │   └── innovation_path.ts
-  └── real_value_engine/
-      ├── business_metrics.ts
-      └── action_planning.ts
+- `idea-enhancer/` - Prompts for the Idea Enhancer agent
+- `market-analyst/` - Prompts for the Market Analyst agent
+- `risk-assessor/` - Prompts for the Risk Assessor agent
+- `technical-advisor/` - Prompts for the Technical Advisor agent
+- `implementation-planner/` - Prompts for the Implementation Planner agent
+
+## Prompt Format
+
+Prompts are defined as template strings with placeholders that are replaced with dynamic content at runtime. For example:
+
+```typescript
+export const ideaEnhancementPrompt = `
+You are an Idea Enhancement Agent. Your task is to help improve the following idea:
+
+IDEA: {{idea}}
+
+Please provide suggestions to enhance this idea in the following areas:
+1. Uniqueness
+2. Market potential
+3. Technical feasibility
+4. User experience
+5. Business model
+
+Your response should be structured, detailed, and actionable.
+`;
 ```
 
 ## Usage
 
-Import prompt templates in agent code:
+Prompts are imported and used by the agent implementations in the `../agents` directory. They are typically combined with the agent's memory and the current task to generate a complete prompt for the AI model.
 
-```typescript
-import { innovationPrompt } from '../prompts/idea_enhancer/innovation_prompt';
+## Adding New Prompts
 
-// Use the prompt in agent code
-const response = await this.openai.chat.completions.create({
-  model: defaultConfig.openai.defaultModel,
-  messages: [
-    { role: 'system', content: innovationPrompt },
-    { role: 'user', content: userQuery }
-  ],
-  temperature: defaultConfig.openai.defaultTemperature,
-});
-``` 
+When adding new prompts, follow these guidelines:
+
+1. Use descriptive variable names that indicate the purpose of the prompt
+2. Include placeholders for dynamic content using the `{{placeholder}}` syntax
+3. Structure the prompt to elicit the desired response format
+4. Include clear instructions and context for the AI model
+5. Document any special formatting or requirements in comments 

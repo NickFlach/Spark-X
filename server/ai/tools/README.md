@@ -1,65 +1,55 @@
-# AI Tools
+# AI Agent Tools
 
-This directory contains tools and utilities that can be used by AI agents in the Spark-X platform.
+This directory contains tools that can be used by AI agents in the Spark-X platform.
 
 ## Purpose
 
-- Provide reusable tools for common agent tasks
-- Standardize interfaces for external API integrations
-- Enable agents to interact with external systems
-- Support complex operations beyond basic language model capabilities
+Tools are functions that agents can use to interact with external systems, retrieve data, or perform specific tasks. They extend the capabilities of agents beyond simple text generation.
 
-## Structure
+## Tool Structure
 
-Tools are organized by functionality:
-
-```
-tools/
-  ├── data_processing/
-  │   ├── data_extraction.ts
-  │   └── data_transformation.ts
-  ├── external_apis/
-  │   ├── market_data_api.ts
-  │   └── news_api.ts
-  ├── knowledge_base/
-  │   ├── kb_query.ts
-  │   └── kb_update.ts
-  ├── visualization/
-  │   ├── chart_generator.ts
-  │   └── report_formatter.ts
-  ├── blockchain/
-  │   ├── contract_interaction.ts
-  │   └── transaction_verification.ts
-  ├── analytics/
-  │   ├── trend_analysis.ts
-  │   └── performance_metrics.ts
-  └── utilities/
-      ├── string_utils.ts
-      └── validation.ts
-```
-
-## Usage
-
-Import tools in agent code:
+Each tool should follow this structure:
 
 ```typescript
-import { extractData } from '../tools/data_processing/data_extraction';
-import { queryMarketData } from '../tools/external_apis/market_data_api';
+import { AgentTool } from '../types';
 
-// Use the tools in agent code
-async function analyzeMarket(query: string): Promise<any> {
-  const marketData = await queryMarketData(query);
-  const extractedInsights = extractData(marketData, ['trends', 'competitors', 'opportunities']);
-  return extractedInsights;
-}
+export const exampleTool: AgentTool = {
+  name: 'example_tool',
+  description: 'A tool that performs a specific task',
+  parameters: {
+    param1: {
+      type: 'string',
+      description: 'Description of parameter 1',
+      required: true
+    },
+    param2: {
+      type: 'number',
+      description: 'Description of parameter 2',
+      required: false
+    }
+  },
+  function: async (param1: string, param2?: number) => {
+    // Tool implementation
+    return { result: 'Tool output' };
+  }
+};
 ```
+
+## Available Tools
+
+The following tools are available for agents to use:
+
+- **Market Research Tools**: Tools for gathering market data, competitor information, and industry trends
+- **Technical Analysis Tools**: Tools for analyzing technical feasibility, technology stacks, and architecture
+- **Risk Assessment Tools**: Tools for identifying and evaluating potential risks
+- **Implementation Planning Tools**: Tools for creating project plans, timelines, and resource allocations
 
 ## Adding New Tools
 
-When adding new tools:
+When adding new tools, follow these guidelines:
 
-1. Create a new file in the appropriate subdirectory
-2. Implement the tool with clear input/output types
-3. Add comprehensive documentation
-4. Include usage examples
-5. Add tests for the tool functionality 
+1. Create a new file for each tool or group of related tools
+2. Provide clear descriptions and parameter documentation
+3. Implement proper error handling and validation
+4. Return structured data that can be easily processed by agents
+5. Add tests to verify tool functionality 

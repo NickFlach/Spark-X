@@ -1,4 +1,4 @@
-import { AgentMemory, MemoryEntry, MemoryFilter } from '../types/index';
+import { AgentMemory, MemoryEntry, MemoryFilter } from '../types';
 
 export class AgentMemoryManager implements AgentMemory {
   private entries: MemoryEntry[] = [];
