@@ -1,0 +1,126 @@
+# Spark-X Platform
+
+Privacy-preserving analytics platform with blockchain integration.
+
+## Project Structure
+
+The Spark-X platform has been unified into a cohesive structure with the following components:
+
+```
+spark-x/
+├── contracts/              # Smart contracts for blockchain integration
+│   ├── contracts/          # Solidity smart contract source files
+│   └── scripts/            # Deployment and management scripts
+├── frontend/               # Frontend application (React/TypeScript)
+│   └── src/                # Frontend source code
+├── server/                 # Backend server (Node.js/Express)
+│   ├── ai/                 # AI functionality
+│   ├── api/                # API routes and controllers
+│   ├── blockchain/         # Blockchain integration services
+│   ├── security/           # Security middleware and utilities
+│   └── revenue/            # Revenue tracking functionality
+├── shared/                 # Shared types and utilities
+├── package.json            # Unified dependencies
+└── tsconfig.json           # Unified TypeScript configuration
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Ethereum development environment (for blockchain features)
+
+### Installation
+
+1. Clone the repository:
+
+   ```
+   git clone https://github.com/your-org/spark-x.git
+   cd spark-x
+   ```
+
+2. Install dependencies:
+
+   ```
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```
+   cp .env.example .env
+   ```
+   Edit the `.env` file with your configuration.
+
+### Development
+
+#### Running the Backend Server
+
+```
+npm run dev
+```
+
+#### Running the Frontend
+
+```
+npm run dev:frontend
+```
+
+#### Running the Blockchain Node
+
+```
+npm run node:blockchain
+```
+
+#### Deploying Smart Contracts
+
+```
+npm run deploy:contracts:local
+```
+
+### Building for Production
+
+```
+npm run build
+```
+
+This will build both the server and frontend components.
+
+## Testing
+
+```
+npm test
+```
+
+For smart contract tests:
+
+```
+npm run test:contracts
+```
+
+## Architecture
+
+### Frontend
+
+The frontend is built with React and TypeScript, using modern patterns for state management and component organization.
+
+### Backend
+
+The backend is built with Express.js and TypeScript, providing RESTful APIs for the frontend and integrating with blockchain services.
+
+### Blockchain Integration
+
+Smart contracts are written in Solidity and deployed using Hardhat. The backend server communicates with the blockchain through ethers.js.
+
+## Security Features
+
+- Two-factor authentication
+- Rate limiting
+- Security headers
+- Audit logging
+- Privacy controls for analytics data
+
+## License
+
+MIT
